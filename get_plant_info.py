@@ -18,6 +18,7 @@ class GetPlant:
         self.growthRate = None
         self.hardiness = None
         self.homeCare = None
+        self.hazards = None
 
     def get_url_info(self):
         """Method to parse HTML from URL to be used in other methods"""
@@ -108,4 +109,11 @@ class GetPlant:
             self.homeCare = str(self.homeCare)
             return self.homeCare
 
+    def get_hazards(self):
+        # Method to check for hazards and extract hazard details
+        hazards_span = self.soup.find('span', class_='item-poisonous')
+        if hazards_span:
+            self.hazards = hazards_span.get_text(strip=True)
+        else:
+            self.hazards = False
 
