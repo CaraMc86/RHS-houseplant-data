@@ -42,3 +42,22 @@ class URLScraper:
                 self.url_list.append(full_url)
         # Returns the list of all URLs on the page
         return self.url_list
+
+    def display_urls(self):
+        """Display URL list"""
+        for url in self.url_list:
+            print(url)
+
+if __name__ == '__main__':
+    url = 'https://www.rhsplants.co.uk/plants/_/indoor-plants/foliage-indoor-plants/plcid.20/plcid.285/numitems.100/sort.7/canorder.1/'
+
+    # Create an instance of URLScraper
+    instance = URLScraper(url)
+
+    # Fetch URL content and process plant items
+    instance.fetch_url_content()
+    instance.find_plant_items()
+    instance.filter_plant_items()
+
+    # Display the list of URLs
+    instance.display_urls()
