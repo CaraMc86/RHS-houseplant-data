@@ -1,8 +1,6 @@
-from plantsConnect import *
 from new_plantV3 import get_plant_info
 from addPlantToDBV1 import add_plant_to_DB
 from scrape_urlsV2 import scrape_urls
-import sqlite3
 
 main_page_url = 'https://www.rhsplants.co.uk/plants/_/indoor-plants/foliage-indoor-plants/plcid.20/plcid.285/numitems.100/sort.7/canorder.1/'
 

@@ -35,6 +35,3 @@ def scrape_urls(main_page_url):
     # Returns the list of all URLs on the page
     return url_list
 
-if __name__ == '__main__':
-    for item in scrape_urls('https://www.rhsplants.co.uk/plants/_/indoor-plants/foliage-indoor-plants/plcid.20/plcid.285/numitems.100/sort.7/canorder.1/'):
-        print(item)
