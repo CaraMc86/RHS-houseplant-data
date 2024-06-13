@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup as bs
 
 class URLScraper:
     def __init__(self, source_url):
-        """Initialise class attributes"""
+        """Initialise URLScraper class attributes"""
         self.source_url = source_url
         self.soup = None
         self.url_list = []
@@ -13,7 +13,7 @@ class URLScraper:
         # use 'get' request to capture all html information of the page
         url_response = requests.get(self.source_url)
         # Parse the HTML content into the bs (beautifulSoup) object and assign to self.soup
-        self.soup = bs(url_response.content, 'html.parser')
+        self.soup = bs(url_response.text, 'html.parser')
 
     def find_plant_items(self):
         """Locate parent container and individual list items"""
