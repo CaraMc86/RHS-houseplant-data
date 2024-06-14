@@ -1,5 +1,5 @@
 import pytest
-from URL_scraper import URLScraper
+from url_scraper import URLScraper
 
 @pytest.fixture
 def scraper():
