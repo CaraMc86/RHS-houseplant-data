@@ -36,6 +36,16 @@ class PlantDatabase:
             # Handle the error with a message
             print(f'Connection closure failed: {oe}')
 
+    def tableExists(self, table_name):
+        if self.conn is None or self.cursor is None:
+            raise RuntimeError("Database connection is not established.")
+        try:
+            self.cursor.execute('SELECT name FROM sqlite_master WHERE type=\'table\' AND name=?', (table_name,))
+            table_exists = self.cursor.fetchone()
+            return table_exists is not None
+        except sql.Error as e:
+            print(f"An error occurred: {e}")
+            return False
     def createHouseplantTable(self):
         if self.conn is None or self.cursor is None:
             raise RuntimeError("Database connection is not established.")
@@ -70,52 +80,41 @@ class PlantDatabase:
     def readRecords(self, table_name):
         if self.conn is None or self.cursor is None:
             raise RuntimeError("Database connection is not established.")
+        if not self.tableExists(table_name):
+            print(f'Table \'{table_name}\' doesn\'t exist')
+            return
         try:
-            # Check if table exists using sqlite_master
-            self.cursor.execute('SELECT name FROM sqlite_master WHERE type=\'table\' AND name=?', (table_name,))
-            table_exists = self.cursor.fetchone()
-
-            if table_exists:
-                self.cursor.execute(f'SELECT * FROM {table_name}')
-                records = self.cursor.fetchall()
-                for record in records:
-                    print(record)
-            else:
-                print(f'Table \'{table_name}\' doesn\'t exist')
+            self.cursor.execute(f'SELECT * FROM {table_name}')
+            records = self.cursor.fetchall()
+            for record in records:
+                print(record)
         except sql.Error as e:
             print(f"An error occurred: {e}")
 
 
 
-    def deleteRecord (self, id_field):
+    def deleteRecord (self, table_name, id_field):
         """Function defined taking the id_field as a parameter to allow a specific ID to be called and a record deleted."""
         if self.conn is None or self.cursor is None:
             raise RuntimeError("Database connection is not established.")
-        # In try block, select the ID and assigns to plant
+        if not self.tableExists(table_name):
+            print(f'Table \'{table_name}\' doesn\'t exist')
+            return
         try:
-            self.cursor.execute('SELECT * FROM housePlants WHERE ID = ?', (id_field,))
-            plant = self.cursor.fetchone()
-            # If no plant found - message displayed
-            if plant is None:
-                print(f'There is no plant with the ID {id_field}.')
-            # Where an ID is found, cursor executes a delete * command for the given record
-            else:
-                self.cursor.execute('DELETE FROM housePlants WHERE ID = ?', (id_field,))
-                self.conn.commit()
-                print(f'Song with ID {id_field} deleted successfully')
+            self.cursor.execute('DELETE FROM housePlants WHERE ID = ?', (id_field,))
+            self.conn.commit()
+            print(f'Song with ID {id_field} deleted successfully')
         except sql.ProgrammingError as pe:  # Use to handle invalid SQL statement
             print(f"Failed operation: {pe}")
-
 
     def dropTable(self):
         if self.conn is None or self.cursor is None:
             raise RuntimeError("Database connection is not established.")
 
         try:
-            # Drop the "plants" table if it exists - taking the sql command as an argument to perform the action
+            # Drop the "housePlants" table if it exists
             self.cursor.execute("DROP TABLE IF EXISTS housePlants")
-            # Commit the change
             self.conn.commit()
-            print("Table 'plants' dropped successfully.")
-        except sqlite3.Error as e:
+            print("Table 'housePlants' dropped successfully.")
+        except sql.Error as e:
             print(f"An error occurred: {e}")

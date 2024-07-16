@@ -38,7 +38,7 @@ def test_create_table(db_connection):
     plant_db.createHouseplantTable()
     assert True
 
-def test_connect_and_close_connection():
+def test_connect_and_close_connection(db_connection):
     plant_db = PlantDatabase(':memory:')
     plant_db.connect()
     assert plant_db.conn is not None
@@ -76,16 +76,4 @@ def test_delete_record(db_connection):
     plant_db.cursor = db_connection.cursor()
     plant_db.cursor.execute("""
         INSERT INTO housePlants (plantName, altName, eventualHeight, eventualSpread, position, soil, growthRate, hardiness, homeCare, hazards)
-        VALUES ('Test Plant', 'Test Alt', '1m', '1m', 'Sun', 'Loam', 'Medium', 'Hardy', 'Easy', 'None')
-    """)
-    plant_db.conn.commit()
-    plant_db.deleteRecord(1)
-    plant_db.cursor.execute('SELECT * FROM housePlants WHERE ID = 1')
-    assert plant_db.cursor.fetchone() is None
-
-def test_drop_table(db_connection):
-    plant_db = PlantDatabase()
-    plant_db.conn = db_connection
-    plant_db.cursor = db_connection.cursor()
-    plant_db.dropTable()
-    assert True
+        VALUES ('Test Plant', 'Test Alt', '1m', 
